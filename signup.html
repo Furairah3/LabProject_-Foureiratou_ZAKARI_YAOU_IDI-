@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang = "en">
+    <meta charset = "UTF-8">
+    <meta name = "viewport" content = "width=device-width, initial-scale=1.0">
+    <title>Sign Up - MY ATTENDANCE SYSTEM</title>
+    <link rel = "stylesheet" href = "mystyle.css">
+<head>
+    <body>
+        <div class="container">
+        <img src="Logo.png" alt="Logo" class="logo">
+        <h1>Furairah's Attendance Management System</h1>
+        <h2>Sign Up</h2>
+
+        <form action="login.html" method="get">
+            <label for="fullname">Full Name:</label>
+            <input type="text" id="fullname" name="fullname" placeholder="Enter your full name (first and last name)" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Create a password" required>
+
+            <label for="confirmPassword">Confirm Password:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+
+            <label for="ID">Identification Number (ID):</label>
+            <input type="text" pattern="[0-9]*" inputmode="numeric" id="ID" name="ID" placeholder="Enter your ID number" required>
+
+            <label for="dob">Date of Birth:</label>
+            <input type="date" id="dob" name="dob" required>
+
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+                <option value="">Select your role</option>
+                <option value="student">Student</option>
+                <option value="faculty">Faculty</option>
+                <option value="intern">Faculty Intern</option>
+            </select>
+
+            <button type="submit">Register</button>
+            <p>Already have an account? <a href="login.html">Login here</a></p>
+        </form>
+    </div>
+        
+        
+    </body>
+</head>
+
+
+
+
+
+
+
+
+
+
+
+</html>
