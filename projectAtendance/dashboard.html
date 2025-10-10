@@ -7,6 +7,7 @@
 <head>
     <body>
         <nav class="navbar">
+            <img src="Logo.png" alt="Logo" class="logo">
             <h2>Dashboard</h2>
             <ul>
                 <li><a href="#">Courses</a></li>
@@ -14,13 +15,19 @@
                 <li><a href="#">Reports</a></li>
                 <li><a href="login.html">Logout</a></li>
 
+
             </ul>
         </nav>
 
         <main>
-            <section>
+            <section class="welcome-section">
                 <h3>Welcom to your dashboard</h3>
-                <p> This is where you will manage attendance, view report, and handle your courses.</p>
+                <p>Choose your role to continue:</p>
+            <div class="role-links">
+                <a href="student-dashboard.html" class="role-btn">Student Dashboard</a>
+                <a href="faculty-dashboard.html" class="role-btn">Faculty Dashboard</a>
+                <a href="intern-dashboard.html" class="role-btn">Faculty Intern Dashboard</a>
+            </div>
                 
             </section>
         </main>
