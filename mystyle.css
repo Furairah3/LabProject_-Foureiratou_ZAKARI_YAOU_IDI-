@@ -2,20 +2,20 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f3f4f6;
     background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%230078d7' fill-opacity='0.1' fill-rule='evenodd'/%3E%3C/svg%3E");
-    margin:0 ;
+    margin: 0;
     padding: 0;
 }
 
-.container{
-    max-width: 400px;
+.container {
+    max-width: 500px;
     margin: 80px auto;
     background: white;
     padding: 30px;
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0,0,0,0.1);
     text-align: center;
-
 }
+
 .logo {
     height: 100px; 
     width: auto;
@@ -33,26 +33,26 @@ h2 {
     margin-bottom: 20px;
 }
 
-form{
-    display: flex;
-    flex-direction: column;
-
+.form-group {
+    margin-bottom: 15px;
+    text-align: left;
 }
 
 label {
-    text-align: left;
+    display: block;
     margin: 10px 0 5px;
     font-weight: bold;
-
 }
 
 input, select {
+    width: 100%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    box-sizing: border-box;
 }
 
-button:hover {
+button {
     margin-top: 20px;
     padding: 10px;
     background-color: #0078d7;
@@ -60,26 +60,37 @@ button:hover {
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    width: 100%;
 }
 
-buttom:hover{
+button:hover {
     background-color: #005fa3;
-
 }
 
-p{
+p {
     margin-top: 15px;
     font-size: 14px;
-
 }
 
 a {
     color: #0078d7;
     text-decoration: none;
 }
-a:hover{
-    text-decoration: underline;
 
+a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: red;
+    display: none;
+    margin-top: 5px;
+}
+
+.role-specific-fields {
+    border-top: 1px solid #eee;
+    padding-top: 15px;
+    margin-top: 15px;
 }
 
 .navbar {
@@ -90,7 +101,6 @@ a:hover{
     align-items: center;
     padding: 10px 20px; 
     min-height: 60px;
-    
 }
 
 .navbar ul {
@@ -105,20 +115,18 @@ a:hover{
     text-decoration: none;
 }
 
-.navbar a:hover{
+.navbar a:hover {
     text-decoration: underline;
-
 }
 
-@media(max-width: 768px){
-    .container{
-        width:90%;
+@media (max-width: 768px) {
+    .container {
+        width: 90%;
     }
     .navbar ul {
         flex-direction: column;
         align-items: flex-start;
     }
-    
 }
 
 .dashboard-content {
@@ -142,18 +150,13 @@ a:hover{
     border-radius: 5px;
     transition: background-color 0.3s;
 }
+
 .role-btn:hover {
     background-color: #005fa3;
     text-decoration: none;
 }
 
-.course-item{
-    background-color: #005fa3;
-    text-decoration:none ;
-
-}
-
-.course-item{
+.course-item {
     background: #f8f9fa;
     padding: 15px;
     margin: 10px 0;
@@ -165,6 +168,7 @@ a:hover{
     padding: 10px;
     margin: 10px 0;
 }
+
 .action-btn {
     padding: 10px 20px;
     margin: 5px;
@@ -174,6 +178,7 @@ a:hover{
     border-radius: 5px;
     cursor: pointer;
 }
+
 .action-btn:hover {
     background-color: #005fa3;
 }
@@ -221,4 +226,178 @@ th, td {
 
 th {
     background-color: #f8f9fa;
+}
+/* Additional styles for intern dashboard */
+.intern-info {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 5px;
+    margin-top: 10px;
+}
+
+.intern-info p {
+    margin: 5px 0;
+    color: #555;
+}
+
+.course-details {
+    margin: 10px 0;
+}
+
+.course-details p {
+    margin: 5px 0;
+    font-size: 0.9em;
+}
+
+.course-actions {
+    margin-top: 10px;
+}
+
+.action-btn.small {
+    padding: 5px 10px;
+    font-size: 0.8em;
+    margin-right: 5px;
+}
+
+.status-completed {
+    background: #28a745;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
+
+.status-upcoming {
+    background: #ffc107;
+    color: black;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+}
+
+.status-active {
+    color: #28a745;
+    font-weight: bold;
+}
+
+.status-warning {
+    color: #ffc107;
+    font-weight: bold;
+}
+
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    max-width: 500px;
+    width: 90%;
+}
+
+.session-list {
+    margin: 15px 0;
+}
+
+.session-option {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 5px 0;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.session-option:hover {
+    background: #f8f9fa;
+}
+
+.reports-list {
+    margin-top: 20px;
+}
+
+.report-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin: 10px 0;
+}
+
+.report-info h4 {
+    margin: 0 0 5px 0;
+}
+
+.report-type {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.8em;
+    background: #0078d7;
+    color: white;
+}
+
+.report-type.summary { background: #28a745; }
+.report-type.course { background: #17a2b8; }
+.report-type.trend { background: #6f42c1; }
+
+.student-management {
+    margin-top: 20px;
+}
+
+.management-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.search-input, .filter-select {
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.student-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.student-table th,
+.student-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.student-table th {
+    background: #f8f9fa;
+    font-weight: bold;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .report-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .report-actions {
+        margin-top: 10px;
+    }
+    
+    .management-controls {
+        flex-direction: column;
+    }
 }

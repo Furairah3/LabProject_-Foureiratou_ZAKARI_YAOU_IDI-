@@ -6,55 +6,128 @@
     <title>Sign Up - MY ATTENDANCE SYSTEM</title>
     <link rel="stylesheet" href="mystyle.css">
 </head>
-
 <body>
     <div class="container">
         <img src="Logo.png" alt="Logo" class="logo">
         <h1>Furairah's Attendance Management System</h1>
         <h2>Sign Up</h2>
-
         
         <form id="signupForm" action="login.html" method="get">
-            <label for="fullname">Full Name:</label>
-            <input type="text" id="fullname" name="fullname" placeholder="Enter your full name (first and last name)" required>
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" placeholder="Enter your first name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" placeholder="Enter your last name" required>
+            </div>
 
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" placeholder="Create a password" required>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" name="password" placeholder="Create a password" required>
+            </div>
 
-            <label for="confirmPassword">Confirm Password:</label>
-            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+            <div class="form-group">
+                <label for="confirmPassword">Confirm Password:</label>
+                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                <small id="passwordMessage" class="error-message">Passwords do not match!</small>
+            </div>
 
-            <small id="passwordMessage" style="color: red; display: none;">Passwords do not match!</small>
+            <div class="form-group">
+                <label for="user_id">User ID:</label>
+                <input type="text" pattern="[0-9]*" inputmode="numeric" id="user_id" name="user_id" placeholder="Enter your user ID" required>
+            </div>
 
-            <label for="ID">Identification Number (ID):</label>
-            <input type="text" pattern="[0-9]*" inputmode="numeric" id="ID" name="ID" placeholder="Enter your ID number" required>
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required>
+            </div>
 
-            <label for="dob">Date of Birth:</label>
-            <input type="date" id="dob" name="dob" required>
+            <div class="form-group">
+                <label for="role">Role:</label>
+                <select id="role" name="role" required onchange="toggleRoleFields()">
+                    <option value="">Select your role</option>
+                    <option value="student">Student</option>
+                    <option value="faculty">Faculty</option>
+                    <option value="intern">Faculty Intern</option>
+                </select>
+            </div>
 
-            <label for="role">Role:</label>
-            <select id="role" name="role" required>
-                <option value="">Select your role</option>
-                <option value="student">Student</option>
-                <option value="faculty">Faculty</option>
-                <option value="intern">Faculty Intern</option>
-            </select>
+            <!-- Student-specific fields -->
+            <div id="studentFields" class="role-specific-fields">
+                <div class="form-group">
+                    <label for="major_id">Major:</label>
+                    <select id="major_id" name="major_id">
+                        <option value="">Select your major</option>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="year_of_study">Year of Study:</label>
+                    <input type="number" id="year_of_study" name="year_of_study" min="1" max="5" placeholder="Enter year of study">
+                </div>
+            </div>
+
+            <!-- Faculty-specific fields -->
+            <div id="facultyFields" class="role-specific-fields">
+                <div class="form-group">
+                    <label for="department_id">Department:</label>
+                    <select id="department_id" name="department_id">
+                        <option value="">Select your department</option>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="designation">Designation:</label>
+                    <input type="text" id="designation" name="designation" placeholder="Enter your designation">
+                </div>
+            </div>
+
+            <!-- Intern-specific fields -->
+            <div id="internFields" class="role-specific-fields">
+                <div class="form-group">
+                    <label for="assigned_department">Assigned Department:</label>
+                    <select id="assigned_department" name="assigned_department">
+                        <option value="">Select assigned department</option>
+                        <!-- Options will be populated dynamically -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="start_date">Start Date:</label>
+                    <input type="date" id="start_date" name="start_date">
+                </div>
+                
+                <div class="form-group">
+                    <label for="end_date">End Date:</label>
+                    <input type="date" id="end_date" name="end_date">
+                </div>
+            </div>
 
             <button type="submit">Register</button>
             <p>Already have an account? <a href="login.html">Login here</a></p>
         </form>
     </div>
 
-    
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const form = document.getElementById('signupForm');
             const password = document.getElementById('password');
             const confirmPassword = document.getElementById('confirmPassword');
             const message = document.getElementById('passwordMessage');
+
+            // Hide all role-specific fields initially
+            document.querySelectorAll('.role-specific-fields').forEach(field => {
+                field.style.display = 'none';
+            });
 
             form.addEventListener('submit', function (event) {
                 if (password.value !== confirmPassword.value) {
@@ -78,6 +151,38 @@
                 }
             });
         });
+
+        function toggleRoleFields() {
+            const role = document.getElementById('role').value;
+            
+            // Hide all role-specific fields
+            document.querySelectorAll('.role-specific-fields').forEach(field => {
+                field.style.display = 'none';
+                // Clear required attributes when hiding
+                field.querySelectorAll('input, select').forEach(input => {
+                    input.removeAttribute('required');
+                });
+            });
+            
+            // Show fields specific to selected role
+            if (role === 'student') {
+                document.getElementById('studentFields').style.display = 'block';
+                // Add required attributes
+                document.getElementById('studentFields').querySelectorAll('input, select').forEach(input => {
+                    input.setAttribute('required', 'required');
+                });
+            } else if (role === 'faculty') {
+                document.getElementById('facultyFields').style.display = 'block';
+                document.getElementById('facultyFields').querySelectorAll('input, select').forEach(input => {
+                    input.setAttribute('required', 'required');
+                });
+            } else if (role === 'intern') {
+                document.getElementById('internFields').style.display = 'block';
+                document.getElementById('internFields').querySelectorAll('input, select').forEach(input => {
+                    input.setAttribute('required', 'required');
+                });
+            }
+        }
     </script>
 </body>
 </html>
