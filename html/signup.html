@@ -142,8 +142,8 @@
             </div>
 
             <button type="submit" id="submitBtn">Register</button>
-            <p>Already have an account? <a href="../html/login.html">Login here</a></p>
-            <p><a href="index.html">← Back to Home</a></p>
+            <p>Already have an account? <a href="login.html">Login here</a></p>
+            <p><a href="../index.html">← Back to Home</a></p>
         </form>
     </div>
 
@@ -162,20 +162,30 @@
             const submitBtn = document.getElementById('submitBtn');
             const formMessage = document.getElementById('formMessage');
 
-            console.log('Script loaded successfully'); // Debug log
+            console.log('Script loaded successfully');
 
             // Initialize - hide all role-specific fields
             studentFields.style.display = 'none';
             facultyFields.style.display = 'none';
             internFields.style.display = 'none';
 
-            // Show/hide role-specific fields
+            // Show/hide role-specific fields and clear values
             roleSelect.addEventListener('change', function() {
-                console.log('Role changed to:', this.value); // Debug log
+                console.log('Role changed to:', this.value);
 
+                // Hide all role-specific fields
                 studentFields.style.display = 'none';
                 facultyFields.style.display = 'none';
                 internFields.style.display = 'none';
+
+                // Clear all role-specific field values when switching roles
+                document.getElementById('major_id').value = '';
+                document.getElementById('year_of_study').value = '';
+                document.getElementById('department_id').value = '';
+                document.getElementById('designation').value = '';
+                document.getElementById('assigned_department').value = '';
+                document.getElementById('start_date').value = '';
+                document.getElementById('end_date').value = '';
 
                 if (this.value === 'student') {
                     studentFields.style.display = 'block';
@@ -212,7 +222,7 @@
             // Form submission
             signupForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                console.log('Form submitted'); // Debug log
+                console.log('Form submitted');
 
                 if (validateForm()) {
                     submitSignupForm();
@@ -342,6 +352,16 @@
                     isValid = false;
                 }
 
+                // Role-specific validation
+                if (role === 'faculty') {
+                    const departmentId = document.getElementById('department_id').value;
+                    if (!departmentId) {
+                        // Make department required for faculty
+                        document.getElementById('department_id').closest('.form-group').querySelector('label').innerHTML += ' <span style="color: red;">*</span>';
+                        isValid = false;
+                    }
+                }
+
                 return isValid;
             }
 
@@ -351,28 +371,55 @@
             }
 
             function submitSignupForm() {
-                const formData = new FormData(signupForm);
+                // Create form data manually to handle empty values properly
+                const formData = new FormData();
+                
+                // Add required fields
+                formData.append('first_name', document.getElementById('first_name').value.trim());
+                formData.append('last_name', document.getElementById('last_name').value.trim());
+                formData.append('email', document.getElementById('email').value.trim());
+                formData.append('password', document.getElementById('password').value);
+                formData.append('user_id', document.getElementById('user_id').value.trim());
+                formData.append('dob', document.getElementById('dob').value);
+                formData.append('role', document.getElementById('role').value);
                 formData.append('action', 'signup');
+
+                // Add role-specific fields only if they have values
+                const majorId = document.getElementById('major_id').value;
+                const yearOfStudy = document.getElementById('year_of_study').value;
+                const departmentId = document.getElementById('department_id').value;
+                const designation = document.getElementById('designation').value;
+                const assignedDepartment = document.getElementById('assigned_department').value;
+                const startDate = document.getElementById('start_date').value;
+                const endDate = document.getElementById('end_date').value;
+
+                if (majorId) formData.append('major_id', majorId);
+                if (yearOfStudy) formData.append('year_of_study', yearOfStudy);
+                if (departmentId) formData.append('department_id', departmentId);
+                if (designation) formData.append('designation', designation.trim());
+                if (assignedDepartment) formData.append('assigned_department', assignedDepartment);
+                if (startDate) formData.append('start_date', startDate);
+                if (endDate) formData.append('end_date', endDate);
 
                 // Show loading state
                 submitBtn.disabled = true;
                 submitBtn.textContent = 'Registering...';
 
-                console.log('Submitting form to auth.php'); // Debug log
+                console.log('Submitting form to auth.php');
 
                 fetch('../php/auth.php', {
                         method: 'POST',
                         body: formData
                     })
                     .then(response => {
-                        console.log('Response received:', response); // Debug log
+                        console.log('Response received:', response);
                         if (!response.ok) {
                             throw new Error('Network response was not ok');
                         }
                         return response.json();
                     })
                     .then(data => {
-                        console.log('Data received:', data); // Debug log
+                        console.log('Data received:', data);
                         if (data.success) {
                             showMessage('Registration successful! Redirecting to login...', 'success');
                             setTimeout(() => {
@@ -407,5 +454,4 @@
         });
     </script>
 </body>
-
 </html>
