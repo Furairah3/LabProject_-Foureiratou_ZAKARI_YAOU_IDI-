@@ -361,7 +361,7 @@ a:hover {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 1000px) {
     .container {
         padding: 25px 20px;
     }
@@ -549,6 +549,7 @@ body {
 /* Dashboard  */
 
 .dashboard-container {
+    min-width: 1000px;
     max-width: 1200px;
     margin: 90px auto 30px;
     padding: 0 20px;
@@ -1331,7 +1332,7 @@ th {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 1000px) {
     .dashboard-container {
         padding: 0 10px;
     }
