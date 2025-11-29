@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FURAIRAH'S ATTENDANCE - Intern Dashboard</title>
+    <link rel="stylesheet" href="../css/mystyle.css">
+    <style>
+        .intern-badge {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .department-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .department-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.5em;
+        }
+        
+        .department-card p {
+            margin: 5px 0;
+            opacity: 0.9;
+        }
+        
+        .monitoring-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="logo-container">
+                <div class="logo-circle">
+                    <span style="color: #2a5298; font-weight: bold;">FA</span>
+                </div>
+                <div>
+                    <div class="logo-text">FURAIRAH'S</div>
+                    <div class="logo-subtitle">ATTENDANCE SYSTEM</div>
+                </div>
+            </div>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#" class="nav-link active" data-section="welcome">📊 Dashboard</a></li>
+            <li><a href="#" class="nav-link" data-section="department">🏢 Department</a></li>
+            <li><a href="#" class="nav-link" data-section="monitoring">👀 Monitoring</a></li>
+            <li><a href="#" class="nav-link" data-section="profile">👤 Profile</a></li>
+            <li><a href="#" class="nav-link" id="logoutBtn">🚪 Logout</a></li>
+        </ul>
+        <div class="user-info">
+            <div class="user-avatar" id="userAvatar">IN</div>
+            <span id="userWelcome">Welcome, Intern!</span>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Welcome Section -->
+        <div id="welcome" class="dashboard-section active">
+            <div class="welcome-section">
+                <div class="welcome-header">
+                    <h1 id="welcomeMessage">Welcome back, Intern!</h1>
+                    <p>Here's your department overview for today</p>
+                </div>
+                <div class="welcome-content">
+                    <div class="department-card" id="departmentCard">
+                        <h3 id="departmentName">Loading Department...</h3>
+                        <p id="departmentInfo">Assigned Department Information</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon">📚</div>
+                            <h3>Department Courses</h3>
+                            <p class="stat-number" id="departmentCourses">0</p>
+                            <span class="stat-label">Active Courses</span>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <h3>Department Students</h3>
+                            <p class="stat-number" id="departmentStudents">0</p>
+                            <span class="stat-label">Enrolled Students</span>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📝</div>
+                            <h3>Pending Requests</h3>
+                            <p class="stat-number" id="pendingRequests">0</p>
+                            <span class="stat-label">Enrollment Requests</span>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📅</div>
+                            <h3>Today's Sessions</h3>
+                            <p class="stat-number" id="todaySessions">0</p>
+                            <span class="stat-label">Department Sessions</span>
+                        </div>
+                    </div>
+
+                    <div class="quick-actions">
+                        <h2>Quick Actions</h2>
+                        <div class="action-buttons">
+                            <button class="action-btn" data-section="department">
+                                📚 View Department Courses
+                            </button>
+                            <button class="action-btn" data-section="monitoring">
+                                👀 Monitor Activities
+                            </button>
+                            <button class="action-btn" data-section="profile">
+                                👤 Update Profile
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="recent-activity">
+                        <h2>Recent Department Activity</h2>
+                        <div class="activity-list" id="recentActivity">
+                            <div class="activity-item">
+                                <div class="activity-icon">⏳</div>
+                                <div class="activity-content">
+                                    <strong>Loading department activity...</strong>
+                                    <small>Please wait</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Department Section -->
+        <div id="department" class="dashboard-section">
+            <div class="profile-section">
+                <h2>Department Courses</h2>
+                <div class="monitoring-section">
+                    <h3>📚 All Courses in Your Department</h3>
+                    <div id="departmentCoursesList">
+                        <div class="session-item">
+                            <div class="session-info">
+                                <h4>Loading courses...</h4>
+                                <p>Please wait while we fetch department courses</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Monitoring Section -->
+        <div id="monitoring" class="dashboard-section">
+            <div class="profile-section">
+                <h2>Department Monitoring</h2>
+
+                <div class="monitoring-section">
+                    <h3>📝 Pending Enrollment Requests</h3>
+                    <div id="pendingEnrollmentsList">
+                        <div class="session-item">
+                            <div class="session-info">
+                                <h4>Loading enrollment requests...</h4>
+                                <p>Please wait while we fetch pending requests</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="monitoring-section">
+                    <h3>📅 Today's Department Sessions</h3>
+                    <div id="todaySessionsList">
+                        <div class="session-item">
+                            <div class="session-info">
+                                <h4>Loading today's sessions...</h4>
+                                <p>Please wait while we fetch session data</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Profile Section -->
+        <div id="profile" class="dashboard-section">
+            <div class="profile-section">
+                <h2>My Intern Profile</h2>
+                <div id="profileContent">
+                    <div class="profile-card">
+                        <div class="profile-header">
+                            <div class="profile-avatar">
+                                <span id="avatarInitials">IN</span>
+                            </div>
+                            <div class="profile-info">
+                                <h3 id="profileName">Loading...</h3>
+                                <p id="profileRole" class="intern-badge">Intern</p>
+                                <p id="profileEmail">Loading...</p>
+                            </div>
+                        </div>
+
+                        <div class="profile-details">
+                            <div class="detail-group">
+                                <label>User ID:</label>
+                                <span id="profileUserId">--</span>
+                            </div>
+                            <div class="detail-group">
+                                <label>Date of Birth:</label>
+                                <span id="profileDob">--</span>
+                            </div>
+                            <div class="detail-group">
+                                <label>Department:</label>
+                                <span id="profileDepartment">--</span>
+                            </div>
+                            <div class="detail-group">
+                                <label>Assigned Department:</label>
+                                <span id="profileAssignedDept">--</span>
+                            </div>
+                            <div class="detail-group">
+                                <label>Designation:</label>
+                                <span id="profileDesignation">--</span>
+                            </div>
+                            <div class="detail-group">
+                                <label>Internship Period:</label>
+                                <span id="profileInternshipPeriod">--</span>
+                            </div>
+                            <div class="detail-group">
+                                <label>Member Since:</label>
+                                <span id="profileJoinDate">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-actions">
+                    <button class="action-btn secondary" id="editProfileBtn">
+                        Edit Profile
+                    </button>
+                    <button class="action-btn secondary" id="changePasswordBtn">
+                        Change Password
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentIntern = null;
+        const API_BASE = '../php/api';
+
+        // Main initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeDashboard();
+            setupEventListeners();
+        });
+
+        function initializeDashboard() {
+            // Get intern data from sessionStorage (set during login)
+            const userData = sessionStorage.getItem('user');
+            if (userData) {
+                currentIntern = JSON.parse(userData);
+                loadDashboardData();
+            } else {
+                // Redirect to login if no user data
+                alert('Please login first');
+                window.location.href = 'login.html';
+            }
+        }
+
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Quick actions
+            document.querySelectorAll('.action-btn[data-section]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    const navLink = document.querySelector(`[data-section="${section}"]`);
+                    if (navLink) navLink.classList.add('active');
+                });
+            });
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    // Call logout API
+                    fetch('../php/logout.php', {
+                            method: 'POST'
+                        })
+                        .then(() => {
+                            sessionStorage.removeItem('user');
+                            window.location.href = 'login.html';
+                        })
+                        .catch(error => {
+                            console.error('Logout error:', error);
+                            sessionStorage.removeItem('user');
+                            window.location.href = 'login.html';
+                        });
+                }
+            });
+        }
+
+        function loadDashboardData() {
+            if (!currentIntern) return;
+
+            // Update user info in navbar
+            document.getElementById('userWelcome').textContent = `Welcome, ${currentIntern.first_name}!`;
+            document.getElementById('userAvatar').textContent = getInitials(currentIntern.first_name, currentIntern.last_name);
+            document.getElementById('welcomeMessage').textContent = `Welcome back, ${currentIntern.first_name}!`;
+
+            // Load dashboard stats and activity
+            loadInternStats();
+            loadProfileData();
+        }
+
+        function loadInternStats() {
+            fetch(`${API_BASE}/intern_dashboard.php?intern_id=${currentIntern.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const dashboard = data.dashboard;
+
+                        // Update department card
+                        document.getElementById('departmentName').textContent = dashboard.intern.assigned_department;
+                        document.getElementById('departmentInfo').textContent = `Monitoring ${dashboard.stats.department_courses} courses and ${dashboard.stats.department_students} students`;
+
+                        // Update stats
+                        document.getElementById('departmentCourses').textContent = dashboard.stats.department_courses;
+                        document.getElementById('departmentStudents').textContent = dashboard.stats.department_students;
+                        document.getElementById('pendingRequests').textContent = dashboard.stats.pending_requests;
+                        document.getElementById('todaySessions').textContent = dashboard.stats.today_sessions;
+
+                        // Load section-specific data
+                        loadDepartmentCourses();
+                        loadPendingEnrollments();
+                        loadTodaySessions();
+                        loadRecentActivity(dashboard);
+                    } else {
+                        showError('Failed to load dashboard stats');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    showError('Failed to load dashboard data');
+                });
+        }
+
+        function loadDepartmentCourses() {
+            fetch(`${API_BASE}/intern_courses.php?intern_id=${currentIntern.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const coursesContainer = document.getElementById('departmentCoursesList');
+
+                        if (data.courses.length > 0) {
+                            coursesContainer.innerHTML = data.courses.map(course => `
+                                <div class="session-item completed">
+                                    <div class="session-info">
+                                        <h4>${course.course_code} - ${course.course_name}</h4>
+                                        <p><strong>Faculty:</strong> ${course.faculty_first_name} ${course.faculty_last_name}</p>
+                                        <p><strong>Enrolled Students:</strong> ${course.enrolled_students}</p>
+                                        <p><strong>Total Sessions:</strong> ${course.total_sessions}</p>
+                                        <p>${course.description || 'No description available'}</p>
+                                    </div>
+                                </div>
+                            `).join('');
+                        } else {
+                            coursesContainer.innerHTML = `
+                                <div class="session-item">
+                                    <div class="session-info">
+                                        <h4>No courses in department</h4>
+                                        <p>There are no active courses in your assigned department</p>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading department courses:', error);
+                });
+        }
+
+        function loadPendingEnrollments() {
+            fetch(`${API_BASE}/intern_dashboard.php?intern_id=${currentIntern.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const enrollmentsContainer = document.getElementById('pendingEnrollmentsList');
+                        const enrollments = data.dashboard.pending_enrollments;
+
+                        if (enrollments.length > 0) {
+                            enrollmentsContainer.innerHTML = enrollments.map(request => `
+                                <div class="session-item upcoming">
+                                    <div class="session-info">
+                                        <h4>${request.course_code} - ${request.course_name}</h4>
+                                        <p><strong>Student:</strong> ${request.student_first_name} ${request.student_last_name} (${request.student_email})</p>
+                                        <p><strong>Faculty:</strong> ${request.faculty_first_name} ${request.faculty_last_name}</p>
+                                        <p><strong>Requested:</strong> ${new Date(request.requested_at).toLocaleDateString()}</p>
+                                        <p class="attendance-status">Pending Approval</p>
+                                    </div>
+                                </div>
+                            `).join('');
+                        } else {
+                            enrollmentsContainer.innerHTML = `
+                                <div class="session-item">
+                                    <div class="session-info">
+                                        <h4>No pending enrollment requests</h4>
+                                        <p>All enrollment requests have been processed</p>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading pending enrollments:', error);
+                });
+        }
+
+        function loadTodaySessions() {
+            fetch(`${API_BASE}/intern_dashboard.php?intern_id=${currentIntern.id}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const sessionsContainer = document.getElementById('todaySessionsList');
+                        const sessions = data.dashboard.today_sessions;
+
+                        if (sessions.length > 0) {
+                            sessionsContainer.innerHTML = sessions.map(session => `
+                                <div class="session-item ${new Date(session.start_time) > new Date() ? 'upcoming' : 'completed'}">
+                                    <div class="session-info">
+                                        <h4>${session.course_code} - ${session.course_name}</h4>
+                                        <p><strong>Time:</strong> ${formatTime(session.start_time)} - ${formatTime(session.end_time)}</p>
+                                        <p><strong>Faculty:</strong> ${session.faculty_first_name} ${session.faculty_last_name}</p>
+                                        <p><strong>Topic:</strong> ${session.topic || 'No topic specified'}</p>
+                                        <p><strong>Location:</strong> ${session.location || 'Not specified'}</p>
+                                        <p><strong>Attendance Code:</strong> ${session.attendance_code}</p>
+                                        <p><strong>Marked Attendance:</strong> ${session.attendance_marked} students</p>
+                                    </div>
+                                </div>
+                            `).join('');
+                        } else {
+                            sessionsContainer.innerHTML = `
+                                <div class="session-item">
+                                    <div class="session-info">
+                                        <h4>No sessions today</h4>
+                                        <p>There are no sessions scheduled for today in your department</p>
+                                    </div>
+                                </div>
+                            `;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading today sessions:', error);
+                });
+        }
+
+        function loadRecentActivity(dashboard) {
+            const activityContainer = document.getElementById('recentActivity');
+            const activities = [];
+
+            // Add recent courses as activity
+            dashboard.recent_courses.slice(0, 3).forEach(course => {
+                activities.push({
+                    type: 'course',
+                    text: `New course: ${course.course_code} - ${course.course_name}`,
+                    date: course.created_at
+                });
+            });
+
+            // Add enrollment requests as activity
+            dashboard.pending_enrollments.slice(0, 2).forEach(request => {
+                activities.push({
+                    type: 'enrollment',
+                    text: `Enrollment request: ${request.student_first_name} ${request.student_last_name} for ${request.course_code}`,
+                    date: request.requested_at
+                });
+            });
+
+            if (activities.length > 0) {
+                activityContainer.innerHTML = activities.map(activity => `
+                    <div class="activity-item">
+                        <div class="activity-icon">${getActivityIcon(activity.type)}</div>
+                        <div class="activity-content">
+                            <strong>${activity.text}</strong>
+                            <small>${formatDate(activity.date)}</small>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                activityContainer.innerHTML = `
+                    <div class="activity-item">
+                        <div class="activity-icon">ℹ️</div>
+                        <div class="activity-content">
+                            <strong>No recent department activity</strong>
+                            <small>Department activity will appear here</small>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function loadProfileData() {
+            if (!currentIntern) return;
+
+            // Update profile section
+            document.getElementById('avatarInitials').textContent = getInitials(currentIntern.first_name, currentIntern.last_name);
+            document.getElementById('profileName').textContent = `${currentIntern.first_name} ${currentIntern.last_name}`;
+            document.getElementById('profileEmail').textContent = currentIntern.email;
+            document.getElementById('profileUserId').textContent = currentIntern.user_id;
+            document.getElementById('profileDob').textContent = formatDate(currentIntern.dob);
+            document.getElementById('profileDepartment').textContent = currentIntern.department_name || 'Not specified';
+            document.getElementById('profileAssignedDept').textContent = currentIntern.assigned_department_name || 'Not specified';
+            document.getElementById('profileDesignation').textContent = currentIntern.designation || 'Not specified';
+
+            // Internship period
+            const startDate = currentIntern.start_date ? formatDate(currentIntern.start_date) : 'Not specified';
+            const endDate = currentIntern.end_date ? formatDate(currentIntern.end_date) : 'Not specified';
+            document.getElementById('profileInternshipPeriod').textContent = `${startDate} to ${endDate}`;
+
+            document.getElementById('profileJoinDate').textContent = formatDate(currentIntern.created_at);
+        }
+
+        // Utility functions
+        function getInitials(firstName, lastName) {
+            return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase();
+        }
+
+        function formatDate(dateString) {
+            if (!dateString) return '--';
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        function formatTime(timeString) {
+            if (!timeString) return '--';
+            const date = new Date(`2000-01-01T${timeString}`);
+            return date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        function getActivityIcon(type) {
+            const icons = {
+                'course': '📚',
+                'enrollment': '📝',
+                'session': '📅'
+            };
+            return icons[type] || '📊';
+        }
+
+        function showError(message) {
+            console.error('Error:', message);
+            alert(message);
+        }
+
+        function showSection(sectionId) {
+            document.querySelectorAll('.dashboard-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            const targetSection = document.getElementById(sectionId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Dashboard - Furairah's Attendance System</title>
+    <link rel="stylesheet" href="../css/mystyle.css">
+    <style>
+        /* Faculty-specific styles */
+        
+        .faculty-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .faculty-stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            border-left: 4px solid #2a5298;
+            transition: transform 0.3s ease;
+        }
+        
+        .faculty-stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .pending-badge {
+            background: #ffc107;
+            color: #212529;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+            margin-left: 10px;
+        }
+        
+        .course-card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #2a5298;
+        }
+        
+        .enrollment-request {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #e9ecef;
+        }
+        
+        .session-card {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary {
+            background: #2a5298;
+            color: white;
+        }
+        
+        .btn-success {
+            background: #28a745;
+            color: white;
+        }
+        
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .btn:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+        
+        .attendance-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+        
+        .status-present {
+            background: #28a745;
+            color: white;
+        }
+        
+        .status-absent {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .status-late {
+            background: #ffc107;
+            color: #212529;
+        }
+        
+        .status-excused {
+            background: #6c757d;
+            color: white;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <div class="logo-container">
+                <div class="logo-circle">
+                    <span style="color: #2a5298; font-weight: bold;">FA</span>
+                </div>
+                <div>
+                    <div class="logo-text">FURAIRAH'S</div>
+                    <div class="logo-subtitle">FACULTY DASHBOARD</div>
+                </div>
+            </div>
+        </div>
+        <ul class="nav-menu">
+            <li><a href="#" class="nav-link active" data-section="dashboard">📊 Dashboard</a></li>
+            <li><a href="#" class="nav-link" data-section="courses">📚 My Courses</a></li>
+            <li><a href="#" class="nav-link" data-section="enrollments">👥 Enrollments</a></li>
+            <li><a href="#" class="nav-link" data-section="sessions">📅 Sessions</a></li>
+            <li><a href="#" class="nav-link" data-section="attendance">✅ Attendance</a></li>
+            <li><a href="#" class="nav-link" id="logoutBtn">🚪 Logout</a></li>
+        </ul>
+        <div class="user-info">
+            <div class="user-avatar" id="facultyAvatar">F</div>
+            <span id="facultyWelcome">Welcome, Faculty!</span>
+        </div>
+    </nav>
+
+    <div class="dashboard-container">
+        <!-- Dashboard Section -->
+        <div id="dashboard" class="dashboard-section active">
+            <div class="welcome-section">
+                <div class="welcome-header">
+                    <h1 id="facultyName">Welcome back, Faculty!</h1>
+                    <p>Here's your teaching overview</p>
+                </div>
+
+                <div class="faculty-stats-grid" id="facultyStats">
+                    <div class="loading">Loading statistics...</div>
+                </div>
+
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="action-buttons">
+                        <button class="action-btn" data-section="courses">
+                            📚 Manage Courses
+                        </button>
+                        <button class="action-btn" data-section="enrollments">
+                            👥 Review Enrollments
+                        </button>
+                        <button class="action-btn" data-section="sessions">
+                            📅 Create Session
+                        </button>
+                        <button class="action-btn" data-section="attendance">
+                            ✅ Mark Attendance
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recent-activity">
+                    <h2>Recent Activity</h2>
+                    <div class="activity-list" id="recentActivity">
+                        <div class="loading">Loading recent activity...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Courses Section -->
+        <div id="courses" class="dashboard-section">
+            <div class="welcome-section">
+                <h2>My Courses</h2>
+                <button class="action-btn" id="createCourseBtn" style="margin-bottom: 20px;">
+                    ➕ Create New Course
+                </button>
+                <div id="coursesList">
+                    <div class="loading">Loading your courses...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enrollments Section -->
+        <div id="enrollments" class="dashboard-section">
+            <div class="welcome-section">
+                <h2>Enrollment Management</h2>
+
+                <div class="sessions-tabs">
+                    <button class="tab-btn active" data-tab="pending">Pending Requests</button>
+                    <button class="tab-btn" data-tab="enrolled">Enrolled Students</button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="pending-tab" class="tab-pane active">
+                        <div id="pendingEnrollments">
+                            <div class="loading">Loading pending enrollment requests...</div>
+                        </div>
+                    </div>
+
+                    <div id="enrolled-tab" class="tab-pane">
+                        <div id="enrolledStudents">
+                            <div class="loading">Loading enrolled students...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sessions Section -->
+        <div id="sessions" class="dashboard-section">
+            <div class="welcome-section">
+                <h2>Class Sessions</h2>
+                <button class="action-btn" id="createSessionBtn" style="margin-bottom: 20px;">
+                    ➕ Create New Session
+                </button>
+
+                <div class="sessions-tabs">
+                    <button class="tab-btn active" data-tab="today-sessions">Today's Sessions</button>
+                    <button class="tab-btn" data-tab="all-sessions">All Sessions</button>
+                </div>
+
+                <div class="tab-content">
+                    <div id="today-sessions-tab" class="tab-pane active">
+                        <div id="todaySessions">
+                            <div class="loading">Loading today's sessions...</div>
+                        </div>
+                    </div>
+
+                    <div id="all-sessions-tab" class="tab-pane">
+                        <div id="allSessions">
+                            <div class="loading">Loading all sessions...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Attendance Section -->
+        <div id="attendance" class="dashboard-section">
+            <div class="welcome-section">
+                <h2>Attendance Management</h2>
+
+                <div class="form-group">
+                    <label for="attendanceCourseSelect">Select Course:</label>
+                    <select id="attendanceCourseSelect">
+                        <option value="">Loading courses...</option>
+                    </select>
+                </div>
+
+                <div id="attendanceContent">
+                    <div class="loading">Select a course to view attendance</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Course Modal -->
+    <div id="createCourseModal" class="modal">
+        <div class="modal-content">
+            <h3>Create New Course</h3>
+            <form id="createCourseForm">
+                <div class="form-group">
+                    <label for="courseCode">Course Code:</label>
+                    <input type="text" id="courseCode" required>
+                </div>
+                <div class="form-group">
+                    <label for="courseName">Course Name:</label>
+                    <input type="text" id="courseName" required>
+                </div>
+                <div class="form-group">
+                    <label for="courseDescription">Description:</label>
+                    <textarea id="courseDescription" rows="3"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="courseCredits">Credits:</label>
+                    <input type="number" id="courseCredits" value="3" min="1" max="6">
+                </div>
+                <div class="form-group">
+                    <label for="courseDepartment">Department:</label>
+                    <select id="courseDepartment">
+                        <option value="1">Computer Science</option>
+                        <option value="2">Electrical Engineering</option>
+                        <option value="3">Mechanical Engineering</option>
+                        <option value="4">Business Administration</option>
+                        <option value="5">Mathematics</option>
+                    </select>
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" id="closeCourseModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Course</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Create Session Modal -->
+    <div id="createSessionModal" class="modal">
+        <div class="modal-content">
+            <h3>Create Class Session</h3>
+            <form id="createSessionForm">
+                <div class="form-group">
+                    <label for="sessionCourse">Course:</label>
+                    <select id="sessionCourse" required>
+                        <option value="">Loading courses...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="sessionDate">Date:</label>
+                    <input type="date" id="sessionDate" required>
+                </div>
+                <div class="form-group">
+                    <label for="sessionStartTime">Start Time:</label>
+                    <input type="time" id="sessionStartTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="sessionEndTime">End Time:</label>
+                    <input type="time" id="sessionEndTime" required>
+                </div>
+                <div class="form-group">
+                    <label for="sessionTopic">Topic:</label>
+                    <input type="text" id="sessionTopic">
+                </div>
+                <div class="form-group">
+                    <label for="sessionLocation">Location:</label>
+                    <input type="text" id="sessionLocation">
+                </div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-secondary" id="closeSessionModal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Session</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Faculty Dashboard JavaScript
+        const API_BASE = '../php/api';
+        let currentFaculty = null;
+        let facultyCourses = [];
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeFacultyDashboard();
+            setupEventListeners();
+        });
+
+        function initializeFacultyDashboard() {
+            // Get faculty data from sessionStorage (set during login)
+            const userData = sessionStorage.getItem('user');
+            if (userData) {
+                currentFaculty = JSON.parse(userData);
+                if (!['faculty', 'intern'].includes(currentFaculty.role)) {
+                    alert('Access denied. Faculty/intern access required.');
+                    window.location.href = 'login.html';
+                    return;
+                }
+                loadFacultyDashboard();
+            } else {
+                alert('Please login first');
+                window.location.href = 'login.html';
+            }
+        }
+
+        function setupEventListeners() {
+            // Navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Tabs
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tab = this.getAttribute('data-tab');
+                    showTab(tab);
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                });
+            });
+
+            // Quick actions
+            document.querySelectorAll('.action-btn[data-section]').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const section = this.getAttribute('data-section');
+                    showSection(section);
+                    document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                    const navLink = document.querySelector(`[data-section="${section}"]`);
+                    if (navLink) navLink.classList.add('active');
+                });
+            });
+
+            // Modals
+            document.getElementById('createCourseBtn').addEventListener('click', showCreateCourseModal);
+            document.getElementById('createSessionBtn').addEventListener('click', showCreateSessionModal);
+            document.getElementById('closeCourseModal').addEventListener('click', closeCreateCourseModal);
+            document.getElementById('closeSessionModal').addEventListener('click', closeCreateSessionModal);
+
+            // Forms
+            document.getElementById('createCourseForm').addEventListener('submit', createCourse);
+            document.getElementById('createSessionForm').addEventListener('submit', createSession);
+
+            // Course selection for attendance
+            document.getElementById('attendanceCourseSelect').addEventListener('change', loadCourseAttendance);
+
+            // Logout
+            document.getElementById('logoutBtn').addEventListener('click', function(e) {
+                e.preventDefault();
+                if (confirm('Are you sure you want to logout?')) {
+                    sessionStorage.removeItem('user');
+                    window.location.href = 'login.html';
+                }
+            });
+
+            // Close modals on outside click
+            document.querySelectorAll('.modal').forEach(modal => {
+                modal.addEventListener('click', function(e) {
+                    if (e.target === this) {
+                        this.style.display = 'none';
+                    }
+                });
+            });
+        }
+
+        function loadFacultyDashboard() {
+            if (!currentFaculty) return;
+
+            // Update faculty info
+            document.getElementById('facultyName').textContent = `Welcome back, ${currentFaculty.first_name}!`;
+            document.getElementById('facultyWelcome').textContent = `Welcome, ${currentFaculty.first_name}!`;
+            document.getElementById('facultyAvatar').textContent = currentFaculty.first_name.charAt(0).toUpperCase();
+
+            // Load dashboard data
+            loadFacultyStats();
+            loadRecentActivity();
+            loadFacultyCourses();
+        }
+
+        async function loadFacultyStats() {
+            try {
+                const response = await fetch(`${API_BASE}/faculty_dashboard.php?faculty_id=${currentFaculty.id}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const stats = data.dashboard.stats;
+                    document.getElementById('facultyStats').innerHTML = `
+                        <div class="faculty-stat-card">
+                            <div class="stat-icon">📚</div>
+                            <h3>Total Courses</h3>
+                            <p class="stat-number">${stats.total_courses}</p>
+                            <span class="stat-label">Teaching</span>
+                        </div>
+                        <div class="faculty-stat-card">
+                            <div class="stat-icon">👥</div>
+                            <h3>Total Students</h3>
+                            <p class="stat-number">${stats.total_students}</p>
+                            <span class="stat-label">Enrolled</span>
+                        </div>
+                        <div class="faculty-stat-card">
+                            <div class="stat-icon">⏳</div>
+                            <h3>Pending Requests</h3>
+                            <p class="stat-number">${stats.pending_requests}</p>
+                            <span class="stat-label">Awaiting Review</span>
+                        </div>
+                        <div class="faculty-stat-card">
+                            <div class="stat-icon">📅</div>
+                            <h3>Today's Sessions</h3>
+                            <p class="stat-number">${stats.today_sessions}</p>
+                            <span class="stat-label">Scheduled</span>
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error loading faculty stats:', error);
+            }
+        }
+
+        // ... (I'll continue with the remaining JavaScript functions in the next message)
+        // Continue from previous JavaScript...
+
+        async function loadRecentActivity() {
+            try {
+                const response = await fetch(`${API_BASE}/faculty_dashboard.php?faculty_id=${currentFaculty.id}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const dashboard = data.dashboard;
+                    let activityHTML = '';
+
+                    // Add pending enrollments to activity
+                    if (dashboard.pending_enrollments && dashboard.pending_enrollments.length > 0) {
+                        dashboard.pending_enrollments.slice(0, 3).forEach(request => {
+                            activityHTML += `
+                        <div class="activity-item">
+                            <div class="activity-icon">📝</div>
+                            <div class="activity-content">
+                                <strong>Enrollment request from ${request.student_first_name} ${request.student_last_name}</strong>
+                                <small>Course: ${request.course_code} - ${request.course_name}</small>
+                            </div>
+                        </div>
+                    `;
+                        });
+                    }
+
+                    // Add today's sessions to activity
+                    if (dashboard.today_sessions && dashboard.today_sessions.length > 0) {
+                        dashboard.today_sessions.slice(0, 2).forEach(session => {
+                            activityHTML += `
+                        <div class="activity-item">
+                            <div class="activity-icon">📅</div>
+                            <div class="activity-content">
+                                <strong>Today: ${session.course_code} - ${session.topic || 'Class Session'}</strong>
+                                <small>${session.start_time} | ${session.location || 'No location'}</small>
+                            </div>
+                        </div>
+                    `;
+                        });
+                    }
+
+                    // Add recent courses to activity
+                    if (dashboard.recent_courses && dashboard.recent_courses.length > 0) {
+                        dashboard.recent_courses.slice(0, 2).forEach(course => {
+                            activityHTML += `
+                        <div class="activity-item">
+                            <div class="activity-icon">📚</div>
+                            <div class="activity-content">
+                                <strong>Course: ${course.course_code} - ${course.course_name}</strong>
+                                <small>${course.enrolled_students || 0} students enrolled</small>
+                            </div>
+                        </div>
+                    `;
+                        });
+                    }
+
+                    if (activityHTML === '') {
+                        activityHTML = '<div class="activity-item"><div class="activity-content"><strong>No recent activity</strong></div></div>';
+                    }
+
+                    document.getElementById('recentActivity').innerHTML = activityHTML;
+                }
+            } catch (error) {
+                console.error('Error loading recent activity:', error);
+            }
+        }
+
+        async function loadFacultyCourses() {
+            try {
+                const response = await fetch(`${API_BASE}/courses.php?faculty_id=${currentFaculty.id}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    facultyCourses = data.courses;
+                    renderCoursesList();
+                    populateCourseSelects();
+                }
+            } catch (error) {
+                console.error('Error loading faculty courses:', error);
+            }
+        }
+
+        function renderCoursesList() {
+            const coursesList = document.getElementById('coursesList');
+
+            if (facultyCourses.length === 0) {
+                coursesList.innerHTML = '<div class="course-card"><p>No courses found. Create your first course!</p></div>';
+                return;
+            }
+
+            coursesList.innerHTML = facultyCourses.map(course => `
+        <div class="course-card">
+            <h3>${course.course_code} - ${course.course_name}</h3>
+            <p>${course.description || 'No description'}</p>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                <div>
+                    <small><strong>Credits:</strong> ${course.credits}</small> | 
+                    <small><strong>Department:</strong> ${course.department_name || 'Not specified'}</small> | 
+                    <small><strong>Students:</strong> ${course.enrolled_students || 0}</small> | 
+                    <small><strong>Sessions:</strong> ${course.total_sessions || 0}</small>
+                </div>
+                <button class="btn btn-primary" onclick="viewCourseDetails(${course.id})">View Details</button>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        function populateCourseSelects() {
+            const sessionCourseSelect = document.getElementById('sessionCourse');
+            const attendanceCourseSelect = document.getElementById('attendanceCourseSelect');
+
+            let optionsHTML = '<option value="">Select a course</option>';
+            facultyCourses.forEach(course => {
+                optionsHTML += `<option value="${course.id}">${course.course_code} - ${course.course_name}</option>`;
+            });
+
+            sessionCourseSelect.innerHTML = optionsHTML;
+            attendanceCourseSelect.innerHTML = optionsHTML;
+        }
+
+        async function loadPendingEnrollments() {
+            try {
+                const response = await fetch(`${API_BASE}/enrollments.php?faculty_id=${currentFaculty.id}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const pendingEnrollments = document.getElementById('pendingEnrollments');
+
+                    if (data.pending_enrollments.length === 0) {
+                        pendingEnrollments.innerHTML = '<p>No pending enrollment requests.</p>';
+                        return;
+                    }
+
+                    pendingEnrollments.innerHTML = data.pending_enrollments.map(request => `
+                <div class="enrollment-request">
+                    <h4>${request.student_first_name} ${request.student_last_name}</h4>
+                    <p><strong>Course:</strong> ${request.course_code} - ${request.course_name}</p>
+                    <p><strong>Email:</strong> ${request.student_email}</p>
+                    <p><strong>Student ID:</strong> ${request.student_user_id}</p>
+                    <p><strong>Major:</strong> ${request.major_name || 'Not specified'}</p>
+                    <p><strong>Requested:</strong> ${new Date(request.requested_at).toLocaleDateString()}</p>
+                    <div class="btn-group">
+                        <button class="btn btn-success" onclick="processEnrollment(${request.id}, 'approve')">Approve</button>
+                        <button class="btn btn-danger" onclick="processEnrollment(${request.id}, 'reject')">Reject</button>
+                    </div>
+                </div>
+            `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading pending enrollments:', error);
+            }
+        }
+
+        async function loadEnrolledStudents() {
+            try {
+                let allEnrollments = [];
+
+                // Get enrolled students from all courses
+                for (const course of facultyCourses) {
+                    const response = await fetch(`${API_BASE}/enrollments.php?course_id=${course.id}`);
+                    const data = await response.json();
+
+                    if (data.success) {
+                        allEnrollments = allEnrollments.concat(data.enrollments.map(enrollment => ({
+                            ...enrollment,
+                            course_name: course.course_name,
+                            course_code: course.course_code
+                        })));
+                    }
+                }
+
+                const enrolledStudents = document.getElementById('enrolledStudents');
+
+                if (allEnrollments.length === 0) {
+                    enrolledStudents.innerHTML = '<p>No enrolled students found.</p>';
+                    return;
+                }
+
+                enrolledStudents.innerHTML = allEnrollments.map(enrollment => `
+            <div class="enrollment-request">
+                <h4>${enrollment.first_name} ${enrollment.last_name}</h4>
+                <p><strong>Course:</strong> ${enrollment.course_code} - ${enrollment.course_name}</p>
+                <p><strong>Email:</strong> ${enrollment.email}</p>
+                <p><strong>Student ID:</strong> ${enrollment.user_id}</p>
+                <p><strong>Major:</strong> ${enrollment.major_name || 'Not specified'}</p>
+                <p><strong>Enrolled:</strong> ${new Date(enrollment.enrolled_at).toLocaleDateString()}</p>
+                <p><strong>Status:</strong> <span class="attendance-status status-present">${enrollment.status}</span></p>
+            </div>
+        `).join('');
+            } catch (error) {
+                console.error('Error loading enrolled students:', error);
+            }
+        }
+
+        async function loadSessions() {
+            try {
+                const response = await fetch(`${API_BASE}/sessions.php?faculty_id=${currentFaculty.id}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    renderTodaySessions(data.sessions);
+                    renderAllSessions(data.sessions);
+                }
+            } catch (error) {
+                console.error('Error loading sessions:', error);
+            }
+        }
+
+        function renderTodaySessions(sessions) {
+            const todaySessions = document.getElementById('todaySessions');
+            const today = new Date().toISOString().split('T')[0];
+
+            const todaySessionsList = sessions.filter(session => session.session_date === today);
+
+            if (todaySessionsList.length === 0) {
+                todaySessions.innerHTML = '<p>No sessions scheduled for today.</p>';
+                return;
+            }
+
+            todaySessions.innerHTML = todaySessionsList.map(session => `
+        <div class="session-card">
+            <h4>${session.course_code} - ${session.topic || 'Class Session'}</h4>
+            <p><strong>Time:</strong> ${session.start_time} - ${session.end_time}</p>
+            <p><strong>Location:</strong> ${session.location || 'Not specified'}</p>
+            <p><strong>Attendance Code:</strong> <code>${session.attendance_code}</code></p>
+            <p><strong>Attendance:</strong> ${session.present_count || 0}/${session.total_students || 0} students</p>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="viewSessionAttendance(${session.id})">View Attendance</button>
+                <button class="btn btn-secondary" onclick="editSession(${session.id})">Edit</button>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        function renderAllSessions(sessions) {
+            const allSessions = document.getElementById('allSessions');
+
+            if (sessions.length === 0) {
+                allSessions.innerHTML = '<p>No sessions found.</p>';
+                return;
+            }
+
+            allSessions.innerHTML = sessions.map(session => `
+        <div class="session-card">
+            <h4>${session.course_code} - ${session.topic || 'Class Session'}</h4>
+            <p><strong>Date:</strong> ${new Date(session.session_date).toLocaleDateString()}</p>
+            <p><strong>Time:</strong> ${session.start_time} - ${session.end_time}</p>
+            <p><strong>Location:</strong> ${session.location || 'Not specified'}</p>
+            <p><strong>Attendance Code:</strong> <code>${session.attendance_code}</code></p>
+            <p><strong>Attendance:</strong> ${session.present_count || 0}/${session.total_students || 0} students</p>
+            <div class="btn-group">
+                <button class="btn btn-primary" onclick="viewSessionAttendance(${session.id})">View Attendance</button>
+            </div>
+        </div>
+    `).join('');
+        }
+
+        async function loadCourseAttendance() {
+            const courseId = document.getElementById('attendanceCourseSelect').value;
+            const attendanceContent = document.getElementById('attendanceContent');
+
+            if (!courseId) {
+                attendanceContent.innerHTML = '<div class="loading">Select a course to view attendance</div>';
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/attendance.php?course_id=${courseId}`);
+                const data = await response.json();
+
+                if (data.success) {
+                    attendanceContent.innerHTML = `
+                <div class="summary-card">
+                    <h4>Course Attendance Summary</h4>
+                    <p><strong>Total Sessions:</strong> ${data.summary.total_sessions}</p>
+                    <p><strong>Total Students:</strong> ${data.summary.total_students}</p>
+                    <p><strong>Overall Attendance Rate:</strong> ${data.summary.overall_attendance_rate}%</p>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <h4>Student Attendance</h4>
+                    ${data.students.map(student => `
+                        <div class="enrollment-request">
+                            <h5>${student.first_name} ${student.last_name} (${student.user_id})</h5>
+                            <p><strong>Email:</strong> ${student.email}</p>
+                            <p><strong>Major:</strong> ${student.major_name || 'Not specified'}</p>
+                            <p><strong>Attendance Rate:</strong> ${student.attendance_rate}%</p>
+                            <p><strong>Sessions Attended:</strong> ${student.attended_sessions}/${student.total_sessions}</p>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <h4>Session History</h4>
+                    ${data.sessions.map(session => `
+                        <div class="session-card">
+                            <h5>${new Date(session.session_date).toLocaleDateString()} - ${session.topic || 'Class Session'}</h5>
+                            <p><strong>Time:</strong> ${session.start_time} - ${session.end_time}</p>
+                            <p><strong>Attendance:</strong> ${session.present_count}/${session.total_students} students</p>
+                            <button class="btn btn-primary" onclick="viewSessionAttendance(${session.id})">View Details</button>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+    } catch (error) {
+        console.error('Error loading course attendance:', error);
+        attendanceContent.innerHTML = '<div class="error-message">Error loading attendance data</div>';
+    }
+}
+
+// Modal Functions
+function showCreateCourseModal() {
+    document.getElementById('createCourseModal').style.display = 'flex';
+}
+
+function closeCreateCourseModal() {
+    document.getElementById('createCourseModal').style.display = 'none';
+    document.getElementById('createCourseForm').reset();
+}
+
+function showCreateSessionModal() {
+    // Set default date to today
+    document.getElementById('sessionDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('createSessionModal').style.display = 'flex';
+}
+
+function closeCreateSessionModal() {
+    document.getElementById('createSessionModal').style.display = 'none';
+    document.getElementById('createSessionForm').reset();
+}
+
+// Form Submission Functions
+async function createCourse(e) {
+    e.preventDefault();
+    
+    const formData = {
+        course_code: document.getElementById('courseCode').value,
+        course_name: document.getElementById('courseName').value,
+        description: document.getElementById('courseDescription').value,
+        credits: document.getElementById('courseCredits').value,
+        faculty_intern_id: currentFaculty.id,
+        department_id: document.getElementById('courseDepartment').value
+    };
+    
+    try {
+        const response = await fetch(`${API_BASE}/courses.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('Course created successfully!');
+            closeCreateCourseModal();
+            loadFacultyCourses(); // Refresh courses list
+            loadFacultyStats(); // Refresh stats
+        } else {
+            alert('Error creating course: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error creating course:', error);
+        alert('Error creating course');
+    }
+}
+
+async function createSession(e) {
+    e.preventDefault();
+    
+    const formData = {
+        course_id: document.getElementById('sessionCourse').value,
+        session_date: document.getElementById('sessionDate').value,
+        start_time: document.getElementById('sessionStartTime').value + ':00',
+        end_time: document.getElementById('sessionEndTime').value + ':00',
+        topic: document.getElementById('sessionTopic').value,
+        location: document.getElementById('sessionLocation').value,
+        created_by: currentFaculty.id
+    };
+    
+    try {
+        const response = await fetch(`${API_BASE}/sessions.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(formData)
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert('Session created successfully! Attendance code: ' + data.session.attendance_code);
+            closeCreateSessionModal();
+            loadSessions(); // Refresh sessions list
+            loadFacultyStats(); // Refresh stats
+        } else {
+            alert('Error creating session: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error creating session:', error);
+        alert('Error creating session');
+    }
+}
+
+// Enrollment Management
+async function processEnrollment(requestId, action) {
+    if (!confirm(`Are you sure you want to ${action} this enrollment request?`)) {
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/enrollments.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                request_id: requestId,
+                action: action,
+                faculty_id: currentFaculty.id,
+                notes: `${action}ed by faculty`
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            alert(`Enrollment request ${action}ed successfully!`);
+            loadPendingEnrollments(); // Refresh the list
+            loadFacultyStats(); // Refresh stats
+        } else {
+            alert('Error processing enrollment: ' + data.message);
+        }
+    } catch (error) {
+        console.error('Error processing enrollment:', error);
+        alert('Error processing enrollment');
+    }
+}
+
+// Navigation Functions
+function showSection(sectionId) {
+    // Hide all sections
+    document.querySelectorAll('.dashboard-section').forEach(section => {
+        section.classList.remove('active');
+    });
+    
+    // Show selected section
+    const targetSection = document.getElementById(sectionId);
+    if (targetSection) {
+        targetSection.classList.add('active');
+        
+        // Load section-specific data
+        switch(sectionId) {
+            case 'enrollments':
+                loadPendingEnrollments();
+                break;
+            case 'sessions':
+                loadSessions();
+                break;
+            case 'attendance':
+                // Already handled by course select change
+                break;
+        }
+    }
+}
+
+function showTab(tabId) {
+    // Hide all tab panes
+    document.querySelectorAll('.tab-pane').forEach(pane => {
+        pane.classList.remove('active');
+    });
+    
+    // Show selected tab pane
+    const targetTab = document.getElementById(`${tabId}-tab`);
+    if (targetTab) {
+        targetTab.classList.add('active');
+        
+        // Load tab-specific data
+        switch(tabId) {
+            case 'enrolled':
+                loadEnrolledStudents();
+                break;
+            case 'all-sessions':
+                // Already loaded with sessions
+                break;
+        }
+    }
+}
+
+// Placeholder functions for future features
+function viewCourseDetails(courseId) {
+    alert('Course details feature coming soon! Course ID: ' + courseId);
+}
+
+function viewSessionAttendance(sessionId) {
+    alert('Session attendance details feature coming soon! Session ID: ' + sessionId);
+}
+
+function editSession(sessionId) {
+    alert('Edit session feature coming soon! Session ID: ' + sessionId);
+}
+    </script>
+</body>
+
+</html>
