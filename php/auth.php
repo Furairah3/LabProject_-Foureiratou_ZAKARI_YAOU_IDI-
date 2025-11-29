@@ -28,7 +28,7 @@ if ($action === 'signup') {
 }
 
 function handleSignup($pdo) {
-    // Get form data
+    // Get form data and convert empty strings to NULL for integer fields
     $firstName = $_POST['first_name'] ?? '';
     $lastName = $_POST['last_name'] ?? '';
     $email = $_POST['email'] ?? '';
@@ -37,12 +37,12 @@ function handleSignup($pdo) {
     $dob = $_POST['dob'] ?? '';
     $role = $_POST['role'] ?? '';
     
-    // Role-specific fields
-    $majorId = $_POST['major_id'] ?? null;
-    $yearOfStudy = $_POST['year_of_study'] ?? null;
-    $departmentId = $_POST['department_id'] ?? null;
+    // Role-specific fields - convert empty strings to NULL
+    $majorId = !empty($_POST['major_id']) ? $_POST['major_id'] : null;
+    $yearOfStudy = !empty($_POST['year_of_study']) ? $_POST['year_of_study'] : null;
+    $departmentId = !empty($_POST['department_id']) ? $_POST['department_id'] : null;
     $designation = $_POST['designation'] ?? null;
-    $assignedDepartment = $_POST['assigned_department'] ?? null;
+    $assignedDepartment = !empty($_POST['assigned_department']) ? $_POST['assigned_department'] : null;
     $startDate = $_POST['start_date'] ?? null;
     $endDate = $_POST['end_date'] ?? null;
     
